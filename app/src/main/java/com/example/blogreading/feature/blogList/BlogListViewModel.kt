@@ -1,4 +1,4 @@
-package com.example.blogreading.screen
+package com.example.blogreading.feature.blogList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,13 +7,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
-class BlogReadingViewModel(
+class BlogListViewModel(
     private val repository: BlogReadingRepositoryImpl
 ) : ViewModel() {
 
-    private val _blogReadingData = MutableStateFlow<BlogReadingUiState>(BlogReadingUiState.Loading)
+    private val _blogReadingData = MutableStateFlow<BlogListUiState>(BlogListUiState.Loading)
     val blogReadingData = _blogReadingData.asStateFlow()
 
     init {
@@ -25,9 +24,9 @@ class BlogReadingViewModel(
            runCatching {
                repository.getBlog()
            }.onSuccess { data ->
-               _blogReadingData.emit(BlogReadingUiState.Success(data))
+               _blogReadingData.emit(BlogListUiState.Success(data))
            }.onFailure { error ->
-               _blogReadingData.emit(BlogReadingUiState.Error(error.message ?: "Error"))
+               _blogReadingData.emit(BlogListUiState.Error(error.message ?: "Error"))
            }
        }
     }

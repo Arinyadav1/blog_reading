@@ -1,12 +1,14 @@
-package com.example.blogreading.screen
+package com.example.blogreading.feature.blogList
 
 import android.os.Build
+import android.util.Log
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import com.example.blogreading.model.PostResponse
@@ -46,56 +47,40 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun BlogReadingScreen(
     modifier: Modifier = Modifier,
-    viewModel: BlogReadingViewModel = koinViewModel()
+    viewModel: BlogListViewModel = koinViewModel(),
+    onNavigateWebViewScreen: (String) -> Unit
 ) {
     val uiState = viewModel.blogReadingData.collectAsState().value
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
+    Box(
+        modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        when (uiState) {
+            is BlogListUiState.Error -> {
+                Box(
+                    modifier
+                        .padding(horizontal = 30.dp),
+                ) {
                     Text(
-                        "Blog Reading"
+                        text = uiState.msg,
+                        textAlign = TextAlign.Justify
                     )
                 }
-            )
-        }
-    ) { innerPadding ->
-        Box(
-            modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            when (uiState) {
-                is BlogReadingUiState.Error -> {
-                    Box(
-                        modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 30.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = uiState.msg,
-                            textAlign = TextAlign.Justify
-                        )
-                    }
-                }
+            }
 
-                BlogReadingUiState.Loading -> {
-                    Box(
-                        modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
+            BlogListUiState.Loading -> {
+                CircularProgressIndicator()
+            }
 
-                is BlogReadingUiState.Success -> {
-                    ShowListOfBlog(
-                        blogData = uiState.data
-                    )
-                }
+            is BlogListUiState.Success -> {
+                ShowListOfBlog(
+                    blogData = uiState.data,
+                    onNavigateWebViewScreen = {
+                        onNavigateWebViewScreen(it)
+                    }
+                )
             }
         }
     }
@@ -105,9 +90,9 @@ fun BlogReadingScreen(
 @Composable
 private fun ShowListOfBlog(
     blogData: List<PostResponse>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateWebViewScreen: (String) -> Unit
 ) {
-
     val context = LocalContext.current
     val imageLoader =
         ImageLoader.Builder(context).crossfade(true).diskCachePolicy(CachePolicy.ENABLED)
@@ -123,7 +108,7 @@ private fun ShowListOfBlog(
                         .fillMaxWidth()
                         .clickable(
                             onClick = {
-
+                                onNavigateWebViewScreen(item.link)
                             }
                         ),
                     shape = RectangleShape,

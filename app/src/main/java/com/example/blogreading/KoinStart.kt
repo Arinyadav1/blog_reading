@@ -4,7 +4,7 @@ import android.app.Application
 import com.example.blogreading.data.repositoryModule
 import com.example.blogreading.network.dataManagerModule
 import com.example.blogreading.network.networkModule
-import com.example.blogreading.screen.viewModel
+import com.example.blogreading.feature.viewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin

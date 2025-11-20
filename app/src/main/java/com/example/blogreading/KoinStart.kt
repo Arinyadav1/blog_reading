@@ -1,8 +1,10 @@
-package com.example.blogreading
+ package com.example.blogreading
 
 import android.app.Application
 import com.example.blogreading.data.repositoryModule
+import com.example.blogreading.network.dataManagerModule
 import com.example.blogreading.network.networkModule
+import com.example.blogreading.screen.viewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -14,7 +16,7 @@ class KoinStart : Application(){
         startKoin{
             androidLogger()
             androidContext(this@KoinStart)
-            modules(repositoryModule, networkModule)
+            modules(repositoryModule, networkModule, viewModel, dataManagerModule)
         }
     }
 }

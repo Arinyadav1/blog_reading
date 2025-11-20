@@ -4,7 +4,7 @@ import com.example.blogreading.model.PostResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface ApiService {
+interface BlogReadService {
 
     @GET("wp-json/wp/v2/posts")
     suspend fun getBlog(

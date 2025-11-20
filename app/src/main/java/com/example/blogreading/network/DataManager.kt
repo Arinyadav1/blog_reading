@@ -7,7 +7,7 @@ class DataManager(
 ) {
     suspend fun getBlog() : List<PostResponse> {
         return baseApiManager.blogRead().getBlog(
-            10,
+            20,
             1
         )
     }

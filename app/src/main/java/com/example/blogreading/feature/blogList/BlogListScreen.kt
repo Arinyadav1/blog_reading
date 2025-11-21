@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
@@ -50,7 +51,7 @@ fun BlogReadingScreen(
     viewModel: BlogListViewModel = koinViewModel(),
     onNavigateWebViewScreen: (String) -> Unit
 ) {
-    val uiState = viewModel.blogReadingData.collectAsState().value
+    val uiState = viewModel.blogReadingData.collectAsStateWithLifecycle().value
 
     Box(
         modifier

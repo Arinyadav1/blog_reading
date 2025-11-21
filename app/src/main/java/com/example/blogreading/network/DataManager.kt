@@ -6,9 +6,6 @@ class DataManager(
     val baseApiManager: BaseApiManager
 ) {
     suspend fun getBlog() : List<PostResponse> {
-        return baseApiManager.blogRead().getBlog(
-            20,
-            1
-        )
+        return baseApiManager.blogRead().getBlog()
     }
 }

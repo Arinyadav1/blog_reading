@@ -8,14 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreen(
     modifier: Modifier = Modifier,
-    viewModel: WebViewViewModel = viewModel()
+    viewModel: WebViewViewModel = koinViewModel()
 ) {
     val url = viewModel.url.collectAsStateWithLifecycle().value
 

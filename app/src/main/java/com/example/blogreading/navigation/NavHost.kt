@@ -1,5 +1,6 @@
 package com.example.blogreading.navigation
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,11 +14,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.blogreading.feature.blogList.BlogReadingScreen
 import com.example.blogreading.feature.webView.WebViewScreen
@@ -30,6 +35,7 @@ data object ListOfBlogsRoute
 @Serializable
 data class WebViewBlogRoute(val url: String)
 
+@SuppressLint("RestrictedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -38,14 +44,22 @@ fun AppRoot(
 ) {
     val navController = rememberNavController()
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    val showBackButton = navBackStackEntry?.destination
+        ?.hierarchy
+        ?.any { it.hasRoute<WebViewBlogRoute>() } == true
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    if (showBackButton) {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        }
                     }
                 }
             )

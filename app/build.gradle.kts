@@ -70,4 +70,5 @@ dependencies {
     implementation(libs.ktor.client.logging)
     ksp(libs.ktorfit.ksp)
     implementation(libs.ktorfit.lib)
+    implementation(libs.ktorfit.converters.flow)
 }

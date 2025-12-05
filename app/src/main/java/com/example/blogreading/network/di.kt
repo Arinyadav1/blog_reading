@@ -2,6 +2,7 @@ package com.example.blogreading.network
 
 import android.util.Log
 import de.jensklingenberg.ktorfit.Ktorfit
+import de.jensklingenberg.ktorfit.converter.FlowConverterFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -52,6 +53,7 @@ val networkModule = module {
         Ktorfit.Builder()
             .baseUrl("https://blog.vrid.in/")
             .httpClient(get<HttpClient>())
+            .converterFactories(FlowConverterFactory())
             .build()
     }
 

@@ -1,24 +1,57 @@
 package com.example.blogreading.network
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import android.util.Log
+import de.jensklingenberg.ktorfit.Ktorfit
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.ANDROID
+import io.ktor.client.plugins.logging.DEFAULT
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.headers
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import retrofit2.Retrofit
 
 val networkModule = module {
 
-    single {
-        Json { ignoreUnknownKeys = true }
+    single<HttpClient> {
+        HttpClient {
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                        isLenient = true
+                        prettyPrint = true
+                    }
+                )
+            }
+
+            install(Logging) {
+                level = LogLevel.ALL
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        Log.d("KtorClient", message)
+                    }
+                }
+            }
+
+            install(DefaultRequest) {
+                headers {
+                    append("Content-Type", "application/json")
+                    append("Accept", "application/json")
+                }
+            }
+        }
     }
 
-    single {
-        Retrofit.Builder()
+    single<Ktorfit> {
+        Ktorfit.Builder()
             .baseUrl("https://blog.vrid.in/")
-            .addConverterFactory(
-                get<Json>().asConverterFactory("application/json".toMediaType())
-            )
+            .httpClient(get<HttpClient>())
             .build()
     }
 

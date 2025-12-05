@@ -1,9 +1,9 @@
 package com.example.blogreading.network
 
-import retrofit2.Retrofit
+import de.jensklingenberg.ktorfit.Ktorfit
 
 class BaseApiManager(
-    retrofit: Retrofit
+   private val ktorfit: Ktorfit
 ) {
-    val blogReadService: BlogReadService = retrofit.create(BlogReadService::class.java)
+    val blogReadService: BlogReadService = ktorfit.createBlogReadService()
 }

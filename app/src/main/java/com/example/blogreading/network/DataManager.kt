@@ -1,11 +1,15 @@
 package com.example.blogreading.network
 
 import com.example.blogreading.model.PostResponse
+import kotlinx.coroutines.flow.Flow
 
 class DataManager(
-    val baseApiManager: BaseApiManager
+    private val baseApiManager: BaseApiManager
 ) {
-    suspend fun getBlog() : List<PostResponse> {
-        return baseApiManager.blogReadService.getBlog()
+    suspend fun getBlog(
+        perPage : Int,
+        page : Int
+    ) : List<PostResponse>{
+        return baseApiManager.blogReadService.getBlog(perPage, page)
     }
 }

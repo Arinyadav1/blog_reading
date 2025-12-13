@@ -1,5 +1,6 @@
 package com.example.blogreading.feature.blogList
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blogreading.data.BlogReadingRepositoryImpl
@@ -12,23 +13,17 @@ class BlogListViewModel(
     private val repository: BlogReadingRepositoryImpl
 ) : ViewModel() {
 
-    private val _blogReadingData = MutableStateFlow<BlogListUiState>(BlogListUiState.Loading)
-    val blogReadingData = _blogReadingData.asStateFlow()
+    var blogReadingData = repository.getBlog()
 
-    init {
-        getBlog()
-    }
+    private val _isRefresh = MutableStateFlow(false)
+    val isRefresh = _isRefresh.asStateFlow()
 
-    private fun getBlog(){
-       viewModelScope.launch(Dispatchers.IO){
-           runCatching {
-               repository.getBlog()
-           }.onSuccess { data ->
-               _blogReadingData.emit(BlogListUiState.Success(data))
-           }.onFailure { error ->
-               _blogReadingData.emit(BlogListUiState.Error(error.message ?: "Error"))
-           }
-       }
+    fun retry() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _isRefresh.emit(true)
+            blogReadingData = repository.getBlog()
+            _isRefresh.emit(false)
+        }
     }
 
 }

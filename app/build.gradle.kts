@@ -71,4 +71,7 @@ dependencies {
     ksp(libs.ktorfit.ksp)
     implementation(libs.ktorfit.lib)
     implementation(libs.ktorfit.converters.flow)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
 }

@@ -2,6 +2,7 @@ package com.example.blogreading.feature.blogList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.blogreading.data.BlogReadingRepository
 import com.example.blogreading.data.BlogReadingRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BlogListViewModel(
-    private val repository: BlogReadingRepositoryImpl
+    private val repository: BlogReadingRepository
 ) : ViewModel() {
 
     private val _blogReadingData = MutableStateFlow<BlogListUiState>(BlogListUiState.Loading)

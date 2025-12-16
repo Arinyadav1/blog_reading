@@ -26,6 +26,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.ui.Alignment
@@ -55,18 +56,12 @@ fun BlogReadingScreen(
     onNavigateWebViewScreen: (String) -> Unit
 ) {
     val uiState = viewModel.blogReadingData.collectAsLazyPagingItems()
-    val isRefresh = viewModel.isRefresh.collectAsStateWithLifecycle().value
+    val isRefresh by viewModel.isRefresh.collectAsStateWithLifecycle()
 
     PullToRefreshBox(
-        isRefreshing = true, onRefresh = { viewModel.retry() }
-    ) {
+        isRefreshing = isRefresh, onRefresh = { viewModel.retry() }) {
         Box(
-            modifier
-                .fillMaxSize()
-                .pullToRefresh(
-                    state = rememberPullToRefreshState(),
-                    isRefreshing = isRefresh,
-                    onRefresh = { viewModel.retry() }), contentAlignment = Alignment.Center
+            modifier.fillMaxSize()
         ) {
             when (val state = uiState.loadState.refresh) {
                 is LoadState.Error -> {

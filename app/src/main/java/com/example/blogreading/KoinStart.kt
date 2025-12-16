@@ -2,6 +2,7 @@
 
 import android.app.Application
 import com.example.blogreading.data.repositoryModule
+import com.example.blogreading.database.databaseModule
 import com.example.blogreading.network.dataManagerModule
 import com.example.blogreading.network.networkModule
 import com.example.blogreading.feature.viewModel
@@ -16,7 +17,7 @@ class KoinStart : Application(){
         startKoin{
             androidLogger()
             androidContext(this@KoinStart)
-            modules(repositoryModule, networkModule, viewModel, dataManagerModule)
+            modules(repositoryModule, networkModule, viewModel, dataManagerModule, databaseModule)
         }
     }
 }

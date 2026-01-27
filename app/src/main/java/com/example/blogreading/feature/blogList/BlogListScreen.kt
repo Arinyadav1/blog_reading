@@ -43,7 +43,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
-import com.example.blogreading.model.PostResponse
+import com.example.blogreading.database.entity.Post
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -61,17 +61,11 @@ fun BlogReadingScreen(
     PullToRefreshBox(
         isRefreshing = isRefresh, onRefresh = { viewModel.retry() }) {
         Box(
-            modifier.fillMaxSize()
+            modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            when (val state = uiState.loadState.refresh) {
+            when (uiState.loadState.refresh) {
                 is LoadState.Error -> {
-                    Box(
-                        modifier.padding(horizontal = 30.dp),
-                    ) {
-                        Text(
-                            text = state.error.message ?: "", textAlign = TextAlign.Justify
-                        )
-                    }
                 }
 
                 LoadState.Loading -> {
@@ -96,7 +90,7 @@ fun BlogReadingScreen(
 private fun ShowListOfBlog(
     modifier: Modifier = Modifier,
     onNavigateWebViewScreen: (String) -> Unit,
-    pagingData: LazyPagingItems<PostResponse>
+    pagingData: LazyPagingItems<Post>
 ) {
     val context = LocalContext.current
     val imageLoader =
@@ -147,7 +141,7 @@ private fun ShowListOfBlog(
 
                         Text(
                             modifier = modifier.padding(horizontal = 12.dp),
-                            text = item.title.rendered,
+                            text = item.title,
                             fontSize = 16.sp
                         )
 
@@ -174,10 +168,9 @@ private fun ShowListOfBlog(
             }
         }
 
-        when (val state = pagingData.loadState.refresh) {
+        when (pagingData.loadState.append) {
 
             is LoadState.Error -> {
-                Log.d("ARINYADAV", state.error.toString())
                 item {
                     Text(
                         modifier = Modifier

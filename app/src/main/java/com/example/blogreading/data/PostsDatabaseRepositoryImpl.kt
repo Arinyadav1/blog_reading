@@ -5,7 +5,9 @@ import com.example.blogreading.database.PostDataBase
 import com.example.blogreading.database.entity.Post
 import com.example.blogreading.database.entity.PostRemoteKey
 
-internal class PostsDatabaseRepositoryImpl(private val postDataBase : PostDataBase) : PostsDatabaseRepository {
+internal class PostsDatabaseRepositoryImpl(
+    private val postDataBase : PostDataBase
+) : PostsDatabaseRepository {
 
     override fun getPost(): PagingSource<Int, Post> =
         postDataBase.postDao.getPost()
